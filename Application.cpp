@@ -72,7 +72,6 @@ HRESULT Application::Initialise(HINSTANCE hInstance, int nCmdShow)
 	XMStoreFloat4x4(&_world, XMMatrixIdentity());
 	XMStoreFloat4x4(&_world, XMMatrixScaling(0.25f, 0.25f, 0.25f));
 
-	
 
 	//
 	//Initialise Boat Specifc Values
@@ -253,79 +252,10 @@ HRESULT Application::InitVertexBuffer()
 	HRESULT hr;
 
 	//
-	// Create Vertex Buffer
+	// Create Vertex Buffer use this when not using an OBJ Loader for files
 	//
 
-	//
-	// Cube Vertices
-	//
-
-	SimpleVertex cubeVertices[] =
-	{
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-1.0f, 0.5f, -0.5f), XMFLOAT2(0.0f, 0.0f)}, //0
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(1.0f, 0.0f)}, //1
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.5f, 0.5f, 1.0f), XMFLOAT2(0.0f, 1.0f)},//2
-		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.5f, -1.0f, -0.5f), XMFLOAT2(1.0f, 1.0f)},//3
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(0.5f, -1.0f, -0.5f), XMFLOAT2(1.0f, 0.0f)},//4
-		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.5f, 0.5f, 1.0f), XMFLOAT2(0.0f, 0.0f)},//5
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f)},//6
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, 0.5f, -0.5f), XMFLOAT2(0.0f, 1.0f)},//7
-
-		{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT3(-1.0f, 0.5f, -0.5f), XMFLOAT2(0.0f, 0.0f)},//0-8 (Top)
-		{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT3(0.5f, -1.0f, -0.5f), XMFLOAT2(1.0f, 0.0f)},//4-9 (Top)
-		{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT3(0.0f, -1.0f, 0.0f), XMFLOAT2(0.0f, 1.0f)},//1-10 (Top)
-		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT3(0.5f, 0.5f, 1.0f), XMFLOAT2(1.0f, 1.0f)}, //5-11 (Top)
-		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)},//6-12 (Bottom)
-		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT3(0.5f, 0.5f, 1.0f), XMFLOAT2(0.0f, 0.0f)},//2-13 (Bottom)
-		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT3(0.5f, -1.0f, -0.5f), XMFLOAT2(0.0f, 1.0f)},//3-14 (Bottom)
-		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT3(-1.0f, 0.5f, -0.5f), XMFLOAT2(1.0f, 1.0f)},//7-15 (Bottom)
-	};
-
-	D3D11_BUFFER_DESC cubeBd;
-	ZeroMemory(&cubeBd, sizeof(cubeBd));
-	cubeBd.Usage = D3D11_USAGE_DEFAULT;
-	cubeBd.ByteWidth = sizeof(SimpleVertex) * 16;
-	cubeBd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	cubeBd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA InitDataCube;
-	ZeroMemory(&InitDataCube, sizeof(InitDataCube));
-	InitDataCube.pSysMem = cubeVertices;
-
-	hr = _pd3dDevice->CreateBuffer(&cubeBd, &InitDataCube, &_pVertexBufferCube);
-
-	if (FAILED(hr))
-		return hr;
-
-	//
-	// Pyramid Vertices
-	//
-
-	SimpleVertex pyramidVertices[] =
-	{
-		{ XMFLOAT3(-1.0f, 0.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) }, //0
-		{ XMFLOAT3(1.0f, 0.0f, -1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.5f, 0.0f) }, //1
-		{ XMFLOAT3(-1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT2(0.0f, 0.0f) }, //2
-		{ XMFLOAT3(1.0f, 0.0f, 1.0f), XMFLOAT3(0.0f, 0.0f, 0.0f),XMFLOAT2(0.0f, 0.0f) }, //3
-		{ XMFLOAT3(0.0f, 3.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f),XMFLOAT2(0.0f, 0.0f) }, //4
-	};
-
-	D3D11_BUFFER_DESC pyramidBd;
-	ZeroMemory(&pyramidBd, sizeof(pyramidBd));
-	pyramidBd.Usage = D3D11_USAGE_DEFAULT;
-	pyramidBd.ByteWidth = sizeof(SimpleVertex) * 5;
-	pyramidBd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	pyramidBd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA InitDataPyramid;
-	ZeroMemory(&InitDataPyramid, sizeof(InitDataPyramid));
-	InitDataPyramid.pSysMem = pyramidVertices;
-
-	hr = _pd3dDevice->CreateBuffer(&pyramidBd, &InitDataPyramid, &_pVertexBufferPyramid);
-
-	if (FAILED(hr))
-		return hr;
-
+	
 	return S_OK;
 }
 
@@ -334,84 +264,8 @@ HRESULT Application::InitIndexBuffer()
 	HRESULT hr;
 
 	//
-	// Create index buffer
+	// Create index buffer use this when not using an OBJ loader for files
 	//
-
-	//
-	// Cube Indices
-	//
-
-	WORD indices[] =
-	{
-		0,1,2,
-		2,1,3,
-		//Top Face
-		8,9,10,
-		9,11,10,
-		//Bottom Face
-		12,13,14,
-		15,12,14,
-		//Back Face
-		5,4,6,
-		5,6,7,
-		//Right face
-		1,5,7,
-		1,7,3,
-		//Left Face
-		0,2,6,
-		0,6,4,
-	};
-
-	D3D11_BUFFER_DESC cubeBd;
-	ZeroMemory(&cubeBd, sizeof(cubeBd));
-
-	cubeBd.Usage = D3D11_USAGE_DEFAULT;
-	cubeBd.ByteWidth = sizeof(WORD) * 36;
-	cubeBd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	cubeBd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA InitDataCube;
-	ZeroMemory(&InitDataCube, sizeof(InitDataCube));
-	InitDataCube.pSysMem = indices;
-	hr = _pd3dDevice->CreateBuffer(&cubeBd, &InitDataCube, &_pIndexBufferCube);
-
-	if (FAILED(hr))
-		return hr;
-
-	//
-	// Pyramid Vertices
-	//
-
-	WORD pyramidIndices[] =
-	{
-		// Bottom Face
-		0,1,2,
-		1,3,2,
-		//Left Face
-		0,4,2,
-		//Back Face
-		0,1,4,
-		//Right Face
-		4,1,3,
-		//Front Face
-		4,3,2,
-	};
-
-	D3D11_BUFFER_DESC pyramidBd;
-	ZeroMemory(&pyramidBd, sizeof(pyramidBd));
-
-	pyramidBd.Usage = D3D11_USAGE_DEFAULT;
-	pyramidBd.ByteWidth = sizeof(WORD) * 18;
-	pyramidBd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	pyramidBd.CPUAccessFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA InitDataPyramid;
-	ZeroMemory(&InitDataPyramid, sizeof(InitDataPyramid));
-	InitDataPyramid.pSysMem = pyramidIndices;
-	hr = _pd3dDevice->CreateBuffer(&pyramidBd, &InitDataPyramid, &_pIndexBufferPyramid);
-
-	if (FAILED(hr))
-		return hr;
 
 	return S_OK;
 }
@@ -604,23 +458,19 @@ HRESULT Application::InitDevice()
 	InitVertexBuffer();
 
 	//
-	// Set vertex buffer
+	// Set vertex buffer for hard coded values
 	//
 
 	UINT stride = sizeof(SimpleVertex);
 	UINT offset = 0;
 
-	_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferPyramid, &stride, &offset);
-	_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBufferCube, &stride, &offset);
 
 	InitIndexBuffer();
 
 	//
-	// Set index buffer
+	// Set index buffer for hard codes values
 	//
 
-	_pImmediateContext->IASetIndexBuffer(_pIndexBufferPyramid, DXGI_FORMAT_R16_UINT, 0);
-	_pImmediateContext->IASetIndexBuffer(_pIndexBufferCube, DXGI_FORMAT_R16_UINT, 0);
 
 	//
 	// Set primitive topology
@@ -719,10 +569,6 @@ void Application::Cleanup()
 {
 	if (_pImmediateContext) _pImmediateContext->ClearState();
 	if (_pConstantBuffer) _pConstantBuffer->Release();
-	if (_pVertexBufferCube) _pVertexBufferCube->Release();
-	if (_pVertexBufferPyramid) _pVertexBufferPyramid->Release();
-	if (_pIndexBufferCube) _pIndexBufferCube->Release();
-	if (_pIndexBufferPyramid) _pIndexBufferPyramid->Release();
 	if (_pVertexLayout) _pVertexLayout->Release();
 	if (_pVertexShader) _pVertexShader->Release();
 	if (_pPixelShader) _pPixelShader->Release();
@@ -944,6 +790,38 @@ void Application::Update()
 	if (GetAsyncKeyState(VK_UP)) // Forward Key - Move Boat Forwards
 	{
 		playerBoat = playerBoat * XMMatrixTranslationFromVector(boatFacingDirection / 75);
+
+		if (cameraActive == 2)
+		{
+			XMStoreFloat4x4(&fCurrentBoatPosition, playerBoat);
+			firstPersonBoatCameraPosition.x = fCurrentBoatPosition._41;
+			firstPersonBoatCameraPosition.y = fCurrentBoatPosition._42;
+			firstPersonBoatCameraPosition.z = fCurrentBoatPosition._43;
+
+			firstPersonBoatCameraPosition = XMFLOAT3(firstPersonBoatCameraPosition.x, firstPersonBoatCameraPosition.y + 2.0f, firstPersonBoatCameraPosition.z);
+
+			firstPersonCamera->MoveFirstPerson(firstPersonBoatCameraPosition, false);
+			firstPersonCamera->camera._at = boatFacingDirection;
+			_view = firstPersonCamera->camera._view;
+		}
+		else if (cameraActive == 4)
+		{
+			XMStoreFloat4x4(&fCurrentBoatPosition, playerBoat);
+			boatPosition.x = fCurrentBoatPosition._41;
+			boatPosition.y = fCurrentBoatPosition._42;
+			boatPosition.z = fCurrentBoatPosition._43;
+
+			boatPosition = XMFLOAT3(boatPosition.x, boatPosition.y, boatPosition.z);
+
+			thirdPersonBoatCameraPosition = XMFLOAT3(boatPosition.x, boatPosition.y + 20.0f, boatPosition.z - 15.0f);
+
+			thirdPersonCamera->MoveThirdPerson(thirdPersonBoatCameraPosition, boatPosition, true);
+			_view = thirdPersonCamera->camera._view;
+		}
+	}
+	else if (GetAsyncKeyState(0x54))
+	{
+		playerBoat = playerBoat * XMMatrixTranslationFromVector(boatFacingDirection / 25);
 
 		if (cameraActive == 2)
 		{
