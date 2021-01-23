@@ -168,7 +168,6 @@ float3 ambient = (ambientMtrl * ambientLight);
 
 input.Color.rgb = textureColour + (ambient + diffuse + specular);
 input.Color.a = diffuseMtrl.a;
-
 return input.Color;
 }
 
